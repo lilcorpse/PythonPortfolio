@@ -1,0 +1,61 @@
+import numpy as np
+#from utils import isprime, circshift_r
+#find a way to create a function that does the same operation
+import time
+import random
+#import h5py
+
+def hadamard_s(n):
+    start_time = time.time()
+
+    if isinstance(n, int):
+        if n > 0:
+            number_set = set(range(n, 1, -1))
+            prime_numbers = []
+            while number_set:
+                num = number_set.pop()
+                prime_numbers.append(num)
+                number_set.difference_update(set(range(num * 2, n + 1, num)))
+            finish_time = time.time()
+            func_run_time = finish_time - start_time
+            return prime_numbers
+        else:
+            return []
+    else:
+        raise TypeError("Argument must be an integer")
+    if (n - 3) % 4 != 0:
+        print('error! n must be 4m + 3\n')
+        circ_S = 0
+        inv_circ_S = 0
+        return False
+
+    A_k = np.array(range(1,(n-1)//2+1))**2
+    A_k = A_k % n
+    
+    S_1 = np.zeros([1,n])
+    S_1[0,0]=1
+    S_1[0,A_k]=1
+    
+    circ_S=np.zeros([n,n])
+    circ_S[0,:]=S_1
+
+    #for i in range(2,n+1):
+        #circ_S[i-1,:]=circshift_r(circ_S[i-2,:],-1)
+    def bernoulli_process(circ_S="0.5"):
+        circ_S = float(circ_S)
+        while True:
+            yield int(random.random() < circ_S)
+                          
+    
+
+    pos_measure = circ_S>0
+    pos_measure_non = circ_S==0
+    pos_measure_non_matr = True - circ_S
+    pos_measure_matr = circ_S
+    pos_measure_matr[pos_measure_non] = 0
+
+    inv_circ_S = (pos_measure_matr - pos_measure_non_matr)/(n+1)*2
+
+    return circ_S, inv_circ_S
+
+    print(circ_S)
